@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Validador de Código de Acesso</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      text-align: center;
+      padding: 50px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      font-size: 20px;
+      width: 200px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #mensagem {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🔐 Valide seu Código</h1>
+<p>Digite o código de 5 dígitos fornecido:</p>
+<input type="text" id="codigo" maxlength="5" placeholder="Ex: 12345">
+<br>
+<button onclick="validarCodigo()">Validar</button>
+
+<div id="mensagem"></div>
+
+<script>
+const codigosValidos = new Set([11045, 11120, 11602, 13784, 13845, 16406, 18528, 19576, 20673, 21234, 22512, 22601, 25105, 25976, 27203, 27256, 27674, 28110, 29404, 29944, 31125, 31231, 31257, 32439, 33370, 33731, 34263, 34875, 36181, 37209, 37336, 38518, 40618, 40713, 41484, 42015, 42842, 43438, 47483, 48647, 50467, 50737, 51349, 52736, 53586, 53638, 53989, 55282, 55770, 56068, 58617, 59136, 59623, 60304, 60411, 60648, 61050, 62789, 63537, 63602, 64928, 65759, 66085, 66096, 66116, 68912, 69488, 72337, 72348, 74181, 75184, 75970, 76717, 76765, 76847, 76965, 77978, 78050, 79687, 79954, 82244, 82809, 84437, 84981, 85723, 86672, 89186, 89367, 89590, 92325, 93465, 93719, 94916, 95984, 96915, 97405, 97723, 98721, 99005, 99520]);
+const usados = JSON.parse(localStorage.getItem("codigosUsados") || "[]");
+
+function validarCodigo() {
+  const input = document.getElementById("codigo").value.trim();
+  const mensagem = document.getElementById("mensagem");
+
+  if (input.length !== 5 || isNaN(input)) {
+    mensagem.innerText = "⚠️ Digite um código válido com 5 números.";
+    mensagem.style.color = "orange";
+    return;
+  }
+
+  if (!codigosValidos.has(parseInt(input))) {
+    mensagem.innerText = "❌ Código inválido.";
+    mensagem.style.color = "red";
+    return;
+  }
+
+  if (usados.includes(input)) {
+    mensagem.innerText = "🚫 Código já utilizado.";
+    mensagem.style.color = "darkred";
+    return;
+  }
+
+  usados.push(input);
+  localStorage.setItem("codigosUsados", JSON.stringify(usados));
+  mensagem.innerText = "✅ Código válido! Redirecionando...";
+  mensagem.style.color = "green";
+  setTimeout(() => {
+    window.location.href = "jogo.html";
+  }, 1500);
+}
+</script>
+
+</body>
+</html>
