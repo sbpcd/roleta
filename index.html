@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Validador de Código de Acesso</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      text-align: center;
+      padding: 50px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      font-size: 20px;
+      width: 200px;
+      text-align: center;
+      margin-bottom: 20px;
+      pointer-events: none;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    #teclado {
+      margin: 20px auto;
+      max-width: 220px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    #mensagem {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🔐 Valide seu Código</h1>
+<p>Insira seu código de 5 dígitos usando o teclado abaixo:</p>
+<input type="text" id="codigo" maxlength="5" readonly>
+<div id="teclado">
+  <button onclick="inserirNumero('1')">1</button>
+  <button onclick="inserirNumero('2')">2</button>
+  <button onclick="inserirNumero('3')">3</button>
+  <button onclick="inserirNumero('4')">4</button>
+  <button onclick="inserirNumero('5')">5</button>
+  <button onclick="inserirNumero('6')">6</button>
+  <button onclick="inserirNumero('7')">7</button>
+  <button onclick="inserirNumero('8')">8</button>
+  <button onclick="inserirNumero('9')">9</button>
+  <button onclick="apagarNumero()">←</button>
+  <button onclick="inserirNumero('0')">0</button>
+  <button onclick="limparCampo()">C</button>
+</div>
+
+<button onclick="validarCodigo()">Validar</button>
+<div id="mensagem"></div>
+
+<script>
+const codigosValidos = new Set([11045, 11120, 11602, 13784, 13845, 16406, 18528, 19576, 20673, 21234, 22512, 22601, 25105, 25976, 27203, 27256, 27674, 28110, 29404, 29944, 31125, 31231, 31257, 32439, 33370, 33731, 34263, 34875, 36181, 37209, 37336, 38518, 40618, 40713, 41484, 42015, 42842, 43438, 47483, 48647, 50467, 50737, 51349, 52736, 53586, 53638, 53989, 55282, 55770, 56068, 58617, 59136, 59623, 60304, 60411, 60648, 61050, 62789, 63537, 63602, 64928, 65759, 66085, 66096, 66116, 68912, 69488, 72337, 72348, 74181, 75184, 75970, 76717, 76765, 76847, 76965, 77978, 78050, 79687, 79954, 82244, 82809, 84437, 84981, 85723, 86672, 89186, 89367, 89590, 92325, 93465, 93719, 94916, 95984, 96915, 97405, 97723, 98721, 99005, 99520]);
+const usados = JSON.parse(localStorage.getItem("codigosUsados") || "[]");
+
+function inserirNumero(num) {
+  const input = document.getElementById("codigo");
+  if (input.value.length < 5) {
+    input.value += num;
+  }
+}
+
+function apagarNumero() {
+  const input = document.getElementById("codigo");
+  input.value = input.value.slice(0, -1);
+}
+
+function limparCampo() {
+  document.getElementById("codigo").value = "";
+}
+
+function validarCodigo() {
+  const input = document.getElementById("codigo").value.trim();
+  const mensagem = document.getElementById("mensagem");
+
+  if (input.length !== 5 || isNaN(input)) {
+    mensagem.innerText = "⚠️ Digite um código válido com 5 números.";
+    mensagem.style.color = "orange";
+    return;
+  }
+
+  if (!codigosValidos.has(parseInt(input))) {
+    mensagem.innerText = "❌ Código inválido.";
+    mensagem.style.color = "red";
+    return;
+  }
+
+  if (usados.includes(input)) {
+    mensagem.innerText = "🚫 Código já utilizado.";
+    mensagem.style.color = "darkred";
+    return;
+  }
+
+  usados.push(input);
+  localStorage.setItem("codigosUsados", JSON.stringify(usados));
+  mensagem.innerText = "✅ Código válido! Redirecionando...";
+  mensagem.style.color = "green";
+  setTimeout(() => {
+    window.location.href = "jogo.html";
+  }, 1500);
+}
+</script>
+
+</body>
+</html>
